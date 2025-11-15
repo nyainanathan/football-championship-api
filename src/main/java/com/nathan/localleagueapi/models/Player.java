@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Players {
+public class Player {
     private String id;
     private String name;
     private String nationality;
@@ -15,7 +15,7 @@ public class Players {
     private int number;
     private Club club;
 
-    public Players(String id, String name, String nationality,  PlayerPosition position, int number) {
+    public Player(String id, String name, String nationality, PlayerPosition position, int number) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -23,7 +23,7 @@ public class Players {
         this.nationality = nationality;
     }
 
-    public Players(String id, String name, String nationality, PlayerPosition position) {
+    public Player(String id, String name, String nationality, PlayerPosition position) {
         this.id = id;
         this.name = name;
         this.nationality = nationality;
