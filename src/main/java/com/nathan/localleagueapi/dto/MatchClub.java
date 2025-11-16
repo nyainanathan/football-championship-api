@@ -7,5 +7,5 @@ public class MatchClub {
     private String name;
     private String acronym;
     private int score;
-    private List<Scorer> scorers;
+//    private List<Scorer> scorers;
 }
