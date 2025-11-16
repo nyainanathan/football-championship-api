@@ -1,5 +1,6 @@
 package com.nathan.localleagueapi.service;
 
+import com.nathan.localleagueapi.dto.CreateSeason;
 import com.nathan.localleagueapi.model.Season;
 import com.nathan.localleagueapi.repository.SeasonRepo;
 import lombok.AllArgsConstructor;
@@ -15,5 +16,9 @@ public class SeasonService {
 
     public List<Season>  getAllSeasons(){
         return repo.getAllExistingSeasons();
+    }
+
+    public List<Season> createSeasons(List<CreateSeason> seasons){
+        return repo.createSeasons(seasons);
     }
 }
