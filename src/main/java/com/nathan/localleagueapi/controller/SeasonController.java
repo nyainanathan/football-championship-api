@@ -2,6 +2,7 @@ package com.nathan.localleagueapi.controller;
 
 import com.nathan.localleagueapi.dto.CreateSeason;
 import com.nathan.localleagueapi.model.Season;
+import com.nathan.localleagueapi.model.Status;
 import com.nathan.localleagueapi.service.SeasonService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -38,6 +40,17 @@ public class SeasonController {
             return new ResponseEntity<>(seasons, HttpStatus.CREATED);
         } catch (Exception e){
             log.error("Failed to create seasons", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{seasonYear}/status")
+    public ResponseEntity<Season> updateSeasonStatus(@PathVariable String seasonYear, @RequestBody Map<String, Status> updatedYear){
+        try{
+            Season updatedSeason = service.changeSeasonStatus(seasonYear, updatedYear.get("status"));
+            return new  ResponseEntity<>(updatedSeason, HttpStatus.OK);
+        } catch (Exception e){
+            log.error("Failed to update season status", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

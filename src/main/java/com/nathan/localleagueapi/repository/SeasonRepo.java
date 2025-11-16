@@ -69,4 +69,41 @@ public class SeasonRepo {
         }
 
     }
+
+    public Season getSeasonByYear(String seasonYear){
+        String sql = "SELECT * FROM  seasons WHERE year = ?";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, Integer.parseInt(seasonYear));
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return new Season(
+                        rs.getInt("year"),
+                        rs.getString("alias"),
+                        rs.getString("id"),
+                        Status.valueOf(rs.getString("status"))
+                );
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public Season updateSeasonStatus(String seasonYear, Status newStatus){
+        String setSql = "UPDATE seasons SET status=?::status_enum WHERE year=?";
+        String statusString = newStatus.name();
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(setSql);
+            stmt.setString(1, statusString);
+            stmt.setInt(2, Integer.parseInt(seasonYear));
+            stmt.execute();
+            conn.close();
+            return this.getSeasonByYear(seasonYear);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
