@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.models;
+package com.nathan.localleagueapi.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Season {
-    private String id;
     private int year;
     private String alias;
+    private String id;
     private Status status;
 }

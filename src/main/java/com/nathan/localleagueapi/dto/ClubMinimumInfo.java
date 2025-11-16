@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.dtos;
+package com.nathan.localleagueapi.dto;
 
 public class ClubMinimumInfo {
     private String id;

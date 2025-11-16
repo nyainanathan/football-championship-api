@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.models;
+package com.nathan.localleagueapi.model;
 
 public class ClubStatics extends  Club {
     private int rankingPoint;

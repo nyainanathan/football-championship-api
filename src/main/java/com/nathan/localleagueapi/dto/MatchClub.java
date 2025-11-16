@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.dtos;
+package com.nathan.localleagueapi.dto;
 
 import java.util.List;
 

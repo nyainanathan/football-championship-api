@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.configs;
+package com.nathan.localleagueapi.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Configuration;

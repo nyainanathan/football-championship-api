@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.models;
+package com.nathan.localleagueapi.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.models;
+package com.nathan.localleagueapi.model;
 
 public enum Status {
     NOT_STARTED,
