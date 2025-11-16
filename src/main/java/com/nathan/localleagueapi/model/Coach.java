@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Coach {
-    private String id;
     private String name;
     private String nationality;
 }
