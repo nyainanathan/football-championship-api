@@ -93,15 +93,31 @@ public class ClubRepo {
             stmt.setString(4, updatedClub.getStadium());
             stmt.setString(5, String.valueOf(coachId));
 
-            ResultSet rs = stmt.executeQuery();
+            stmt.executeQuery();
+            return updatedClub;
 
-            if(rs.next()){
-                return updatedClub;
-            }
         } catch (Exception e){
             throw new Exception(e);
         }
-        return null;
+
+    }
+
+    public Club CreateClub(Club newClub, UUID coachId) throws Exception {
+        String sql = "INSERT INTO clubs (name, acronym, year_creation, stadium, coach_id) VALUES (?, ?, ?, ?, ?)";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, newClub.getName());
+            stmt.setString(2, newClub.getAcronym());
+            stmt.setInt(3, newClub.getYearCreation());
+            stmt.setString(4, newClub.getStadium());
+            stmt.setString(5, String.valueOf(coachId));
+            stmt.executeUpdate();
+
+            return newClub;
+        } catch (Exception e){
+            throw new Exception(e);
+        }
     }
 }
 
