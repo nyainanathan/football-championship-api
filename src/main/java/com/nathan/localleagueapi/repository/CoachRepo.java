@@ -36,4 +36,22 @@ public class CoachRepo {
         }
         return null;
     }
+
+    public String getCoachIdByName(String coachName) throws Exception {
+        String sql = "select id from coaches where name = ?";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                return rs.getString("id");
+            }
+
+            conn.close();
+        } catch (Exception e){
+            throw new Exception(e);
+        }
+        return null;
+    }
 }
