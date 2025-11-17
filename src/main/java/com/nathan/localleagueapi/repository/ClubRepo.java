@@ -81,8 +81,27 @@ public class ClubRepo {
         return null;
     }
 
-    public Club createClub(List<Club> clubs){
+    public Club updateClub(Club updatedClub, UUID coachId) throws Exception {
+        String sql = "UPDATE clubs SET name= ?, acronym= ? , year_creation= ? , stadium= ? , coach_id = ? WHERE club.id = ?::uuid";
 
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, updatedClub.getName());
+            stmt.setString(2, updatedClub.getAcronym());
+            stmt.setInt(3, updatedClub.getYearCreation());
+            stmt.setString(4, updatedClub.getStadium());
+            stmt.setString(5, String.valueOf(coachId));
+
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                return updatedClub;
+            }
+        } catch (Exception e){
+            throw new Exception(e);
+        }
+        return null;
     }
 }
 
