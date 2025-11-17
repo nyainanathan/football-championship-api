@@ -9,7 +9,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -60,4 +59,35 @@ public class ClubRepo {
             throw new RuntimeException(e);
         }
     }
+
+    public Club getClubById(UUID id){
+
+        String sql = "SELECT club.*, coach.* FROM clubs AS club INNER JOIN coaches AS coach ON club.coach_id = coach.id WHERE club.id = ?::uuid";
+
+        try{
+            Connection conn =  dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, String.valueOf(id));
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+
+                return new Club(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getString("acronym"),
+                        rs.getInt("year_creation"),
+                        rs.getString("stadium"),
+                        new Coach(
+                                rs.getString(8),
+                                rs.getString(9)
+                        )
+                );
+            }
+        } catch(Exception e){
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
+

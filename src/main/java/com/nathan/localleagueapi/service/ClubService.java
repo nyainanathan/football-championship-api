@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -15,5 +16,13 @@ public class ClubService {
 
     public List<Club> getAllClub(){
         return repo.getAllClubs();
+    }
+
+    public Club getClubById(UUID id){
+        Club  club = repo.getClubById(id);
+        if(club == null){
+            throw new RuntimeException("Club with id " + id + " not found");
+        }
+        return club;
     }
 }
