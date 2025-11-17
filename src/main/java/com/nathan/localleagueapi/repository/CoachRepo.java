@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.UUID;
 
 @Repository
 @AllArgsConstructor
@@ -53,5 +54,19 @@ public class CoachRepo {
             throw new Exception(e);
         }
         return null;
+    }
+
+    public UUID createCoach(Coach coach) throws Exception {
+        String sql = "INSERT INTO coaches (name, nationality) VALUES (?, ?) RETURNING *";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, coach.getName());
+            stmt.setString(2, coach.getNationality());
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return UUID.fromString(rs.getString("id"));
+            }
+        }
     }
 }
