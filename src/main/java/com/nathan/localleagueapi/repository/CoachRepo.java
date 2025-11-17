@@ -67,6 +67,9 @@ public class CoachRepo {
             if(rs.next()){
                 return UUID.fromString(rs.getString("id"));
             }
+        } catch (Exception e){
+            throw new Exception(e);
         }
+        return null;
     }
 }
