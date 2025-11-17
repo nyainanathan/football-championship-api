@@ -20,28 +20,16 @@ public class ClubRepo {
     private final DataSource dataSource;
 
     public List<Club> getAllClubs(){
-        String sql = "select * from clubs";
+        String sql = "select clubs.*, coaches.* from clubs join coaches on clubs.coach_id = coaches.id";
         List<Club> clubs = new ArrayList<>();
-        String coachSql = "SELECT * FROM coaches WHERE id = ?::uuid";
+
         try{
             Connection conn =  dataSource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()){
-                UUID coachId = UUID.fromString(rs.getString("coach_id"));
-                PreparedStatement stmt2 = conn.prepareStatement(coachSql);
-                stmt2.setString(1, String.valueOf(coachId));
-                ResultSet rs2 = stmt2.executeQuery();
-                String coachName;
-                String coachNationality;
-                Coach coach = null;
-                if(rs2.next()){
-                        coach = new Coach(
-                                rs2.getString("name"),
-                                rs2.getString("nationality")
-                        );
-                }
+
                 clubs.add(
                         new Club(
                                 rs.getString("id"),
@@ -49,7 +37,10 @@ public class ClubRepo {
                                 rs.getString("acronym"),
                                 rs.getInt("year_creation"),
                                 rs.getString("stadium"),
-                                coach
+                                new Coach(
+                                        rs.getString(8),
+                                        rs.getString(9)
+                                )
                         )
                 );
             }
