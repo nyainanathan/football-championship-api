@@ -1,12 +1,12 @@
 package com.nathan.localleagueapi.service;
 
 import com.nathan.localleagueapi.model.Club;
-import com.nathan.localleagueapi.model.Coach;
 import com.nathan.localleagueapi.repository.ClubRepo;
 import com.nathan.localleagueapi.repository.CoachRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,13 +30,18 @@ public class ClubService {
     }
 
 
-
     public List<Club> updateOrCreateClubs(List<Club> clubs) throws Exception {
-        for(Club club : clubs){
-            Coach coach = club.getCoach();
-            if(coachRepo.getCoachByName(coach.getName()) != null){
 
-            };
+        for(Club club : clubs){
+            Club sameClubBeforeUpdate = repo.getClubById(UUID.fromString(club.getId()));
+            UUID coachId = coachRepo.getCoachIdByName(club.getCoach().getName());
+
+            if(sameClubBeforeUpdate != null){
+                repo.updateClub(club, coachId);
+            } else {
+                repo.createClub(club, coachId);
+            }
         }
+        return clubs;
     }
 }

@@ -38,15 +38,16 @@ public class CoachRepo {
         return null;
     }
 
-    public String getCoachIdByName(String coachName) throws Exception {
+    public UUID getCoachIdByName(String coachName) throws Exception {
         String sql = "select id from coaches where name = ?";
         try{
             Connection conn = dataSource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, coachName);
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
-                return rs.getString("id");
+                return UUID.fromString(rs.getString("id"));
             }
 
             conn.close();

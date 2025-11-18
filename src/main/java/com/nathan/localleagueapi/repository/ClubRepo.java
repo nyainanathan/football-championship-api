@@ -82,7 +82,7 @@ public class ClubRepo {
     }
 
     public Club updateClub(Club updatedClub, UUID coachId) throws Exception {
-        String sql = "UPDATE clubs SET name= ?, acronym= ? , year_creation= ? , stadium= ? , coach_id = ? WHERE club.id = ?::uuid";
+        String sql = "UPDATE clubs SET name= ?, acronym= ? , year_creation= ? , stadium= ? , coach_id = ?::uuid WHERE id = ?::uuid RETURNING *";
 
         try{
             Connection conn = dataSource.getConnection();
@@ -92,18 +92,28 @@ public class ClubRepo {
             stmt.setInt(3, updatedClub.getYearCreation());
             stmt.setString(4, updatedClub.getStadium());
             stmt.setString(5, String.valueOf(coachId));
+            stmt.setString(6, String.valueOf(updatedClub.getId()));
+            ResultSet rs = stmt.executeQuery();
 
-            stmt.executeQuery();
-            return updatedClub;
+            if(rs.next()){
+                return new Club(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getString("acronym"),
+                        rs.getInt("year_creation"),
+                        rs.getString("stadium"),
+                        updatedClub.getCoach()
+                );
+            }
 
         } catch (Exception e){
             throw new Exception(e);
         }
-
+        return null;
     }
 
-    public Club CreateClub(Club newClub, UUID coachId) throws Exception {
-        String sql = "INSERT INTO clubs (name, acronym, year_creation, stadium, coach_id) VALUES (?, ?, ?, ?, ?)";
+    public Club createClub(Club newClub, UUID coachId) throws Exception {
+        String sql = "INSERT INTO clubs (name, acronym, year_creation, stadium, coach_id) VALUES (?, ?, ?, ?, ?::uuid)";
         try{
             Connection conn = dataSource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
