@@ -14,5 +14,7 @@ public class PlayerService {
 
     private PlayerRepo repo;
 
-
+    public List<Player> getPlayers(){
+        return repo.getAllPlayers();
+    }
 }
