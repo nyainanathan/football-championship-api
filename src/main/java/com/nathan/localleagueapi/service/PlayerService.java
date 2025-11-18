@@ -17,4 +17,27 @@ public class PlayerService {
     public List<Player> getPlayers(){
         return repo.getAllPlayers();
     }
+
+    public List<Player> createOrUpdatePlayers(List<Player> players) throws SQLException {
+        System.out.println("andhea");
+        for(Player player : players){
+            try{
+
+            System.out.println("mety aloha iy eto");
+            System.out.println(player.getName());
+            Player playerBeforeUpdate = repo.getPlayerById(player.getId());
+            System.out.println(playerBeforeUpdate);
+            if(playerBeforeUpdate == null){
+                repo.createPlayer(player);
+                System.out.println("Creation");
+            } else {
+                System.out.println("Updating");
+                repo.updatePlayer(player);
+            }
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return players;
+    }
 }

@@ -29,4 +29,14 @@ public class PlayerController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("")
+    public ResponseEntity<List<Player>> createOrUpdatePlayers(@RequestBody List<Player> players){
+        try {
+            List<Player> updatedOrCreatedPlayers = service.createOrUpdatePlayers(players);
+            return new  ResponseEntity<>(updatedOrCreatedPlayers, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
