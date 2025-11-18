@@ -1,6 +1,7 @@
 package com.nathan.localleagueapi.service;
 
 import com.nathan.localleagueapi.model.Player;
+import com.nathan.localleagueapi.model.PlayerStatistic;
 import com.nathan.localleagueapi.repository.PlayerRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,10 @@ public class PlayerService {
             }
         }
         return players;
+    }
+
+    //Stats
+    public PlayerStatistic getStatForPlayerByYear(String playerId, String year) throws SQLException {
+        return repo.getPlayerStatisticForSeason(playerId, year);
     }
 }

@@ -1,8 +1,7 @@
 package com.nathan.localleagueapi.repository;
 
 import com.nathan.localleagueapi.mapper.PlayerRowMapper;
-import com.nathan.localleagueapi.model.Player;
-import com.nathan.localleagueapi.model.PlayerPosition;
+import com.nathan.localleagueapi.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -103,5 +102,36 @@ public class PlayerRepo {
     }
 
     //For stats
+    public PlayerStatistic getPlayerStatisticForSeason(String playerId, String season) throws SQLException {
+      String sql = "SELECT * FROM player_statistics WHERE player_id = ?::uuid AND season = ?";
+      try{
+          Connection conn = dataSource.getConnection();
+          PreparedStatement stmt = conn.prepareStatement(sql);
+          stmt.setString(1, playerId);
+          stmt.setString(2, season);
+          ResultSet rs =  stmt.executeQuery();
+          if(rs.next()){
+              System.out.println(rs.getInt("scored_goals"));
+              System.out.println(rs.getInt("playing_time"));
+              System.out.println(DurationUnit.valueOf(rs.getString("duration_unit")));
+            PlayerStatistic stat = new PlayerStatistic(
+                    rs.getInt("scored_goals"),
+                    new PlayingTime(
+                            rs.getInt("playing_time"),
+                            DurationUnit.valueOf(rs.getString("duration_unit"))
+                    )
+            );
 
+            conn.close();
+              System.out.println(stat.toString());
+            return stat;
+          }
+          else {
+              throw new SQLException("This stat does not exit");
+          }} catch (Exception e) {
+                e.getStackTrace();
+              throw e;
+          }
+
+    }
 }
