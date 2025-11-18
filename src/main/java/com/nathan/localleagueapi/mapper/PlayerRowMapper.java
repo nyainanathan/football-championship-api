@@ -2,20 +2,22 @@ package com.nathan.localleagueapi.mapper;
 
 import com.nathan.localleagueapi.model.Player;
 import com.nathan.localleagueapi.model.PlayerPosition;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class PlayerRowMapper {
 
     public Player map(ResultSet rs) throws SQLException {
         return new Player(
                 rs.getString("id"),
                 rs.getString("name"),
-                rs.getString("nationality"),
+                rs.getInt("number"),
                 PlayerPosition.valueOf(rs.getString("position")),
-                rs.getInt("age"),
-                rs.getInt("number")
+                rs.getString("nationality"),
+                rs.getInt("age")
         );
     }
 }
