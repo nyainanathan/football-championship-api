@@ -1,7 +1,9 @@
 package com.nathan.localleagueapi.repository;
 
+import com.nathan.localleagueapi.mapper.PlayerRowMapper;
 import com.nathan.localleagueapi.model.Club;
 import com.nathan.localleagueapi.model.Coach;
+import com.nathan.localleagueapi.model.Player;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class ClubRepo {
 
     private final DataSource dataSource;
+    private final PlayerRowMapper playerRowMapper;
 
     public List<Club> getAllClubs(){
         String sql = "select clubs.*, coaches.* from clubs join coaches on clubs.coach_id = coaches.id";
@@ -128,6 +131,28 @@ public class ClubRepo {
         } catch (Exception e){
             throw new Exception(e);
         }
+    }
+
+    public List<Player> getClubPlayer(String clubId){
+        String sql = "SELECT * FROM players  WHERE club_id = ?::uuid";
+        List<Player> players = new  ArrayList<>();
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, clubId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                players.add(playerRowMapper.map(rs));
+            }
+            conn.close();
+            return players;
+        } catch (Exception e){
+            e.getStackTrace();
+            throw new RuntimeException(e);
+        }
+
     }
 }
 

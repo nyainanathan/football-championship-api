@@ -1,6 +1,7 @@
 package com.nathan.localleagueapi.controller;
 
 import com.nathan.localleagueapi.model.Club;
+import com.nathan.localleagueapi.model.Player;
 import com.nathan.localleagueapi.service.ClubService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -31,6 +32,19 @@ public class ClubController {
         }
     }
 
+
+    @GetMapping("/{clubId}/players")
+    public ResponseEntity<List<Player>> getClubPlayers(@PathVariable String clubId){
+        try{
+            List<Player> players = service.getClubPlayers(clubId);
+            return new ResponseEntity<>(players, HttpStatus.OK);
+        }  catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     @GetMapping("/{clubId}")
     public ResponseEntity<Club> getClubById(@PathVariable UUID clubId){
         try{
@@ -52,4 +66,8 @@ public class ClubController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
+
 }

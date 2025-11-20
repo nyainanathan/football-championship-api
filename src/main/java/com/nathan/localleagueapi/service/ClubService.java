@@ -1,6 +1,8 @@
 package com.nathan.localleagueapi.service;
 
+import com.nathan.localleagueapi.mapper.PlayerRowMapper;
 import com.nathan.localleagueapi.model.Club;
+import com.nathan.localleagueapi.model.Player;
 import com.nathan.localleagueapi.repository.ClubRepo;
 import com.nathan.localleagueapi.repository.CoachRepo;
 import lombok.AllArgsConstructor;
@@ -29,6 +31,9 @@ public class ClubService {
         return club;
     }
 
+    public List<Player> getClubPlayers(String clubId){
+        return repo.getClubPlayer(clubId);
+    }
 
     public List<Club> updateOrCreateClubs(List<Club> clubs) throws Exception {
 
