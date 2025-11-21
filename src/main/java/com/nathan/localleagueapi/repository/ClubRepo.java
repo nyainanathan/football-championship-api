@@ -154,5 +154,28 @@ public class ClubRepo {
         }
 
     }
+
+    public Player removePlayerFromClub(String playerId){
+        String sql = "UPDATE players SET club_id = NULL where id = ?::UUID RETURNING *";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1,playerId);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                Player player = playerRowMapper.map(rs);
+                conn.close();
+                return player;
+            }
+        } catch(Exception e){
+            e.getStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+
 }
 

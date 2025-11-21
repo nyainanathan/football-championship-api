@@ -101,6 +101,26 @@ public class PlayerRepo {
         return null;
     }
 
+    public String getClubId(String playerID) throws SQLException {
+      String sql = "SELECT club_id FROM players WHERE id = ?::uuid";
+      try{
+          Connection conn = dataSource.getConnection();
+          PreparedStatement stmt = conn.prepareStatement(sql);
+          stmt.setString(1, playerID);
+          ResultSet rs = stmt.executeQuery();
+
+          if(rs.next()){
+              String clubId = rs.getString("club_id");
+              conn.close();
+              return clubId;
+          }
+      } catch (Exception e){
+          e.getStackTrace();
+          throw new RuntimeException(e);
+      }
+      return null;
+    }
+
     //For stats
     public PlayerStatistic getPlayerStatisticForSeason(String playerId, String season) throws SQLException {
       String sql = "SELECT * FROM player_statistics WHERE player_id = ?::uuid AND season = ?";

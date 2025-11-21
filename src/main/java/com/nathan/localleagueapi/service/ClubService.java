@@ -5,19 +5,26 @@ import com.nathan.localleagueapi.model.Club;
 import com.nathan.localleagueapi.model.Player;
 import com.nathan.localleagueapi.repository.ClubRepo;
 import com.nathan.localleagueapi.repository.CoachRepo;
+import com.nathan.localleagueapi.repository.PlayerRepo;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.sql.rowset.RowSetWarning;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ClubService {
 
     private final ClubRepo repo;
     private final CoachRepo coachRepo;
+    private final PlayerRepo playerRepo;
 
     public List<Club> getAllClub(){
         return repo.getAllClubs();
@@ -49,4 +56,20 @@ public class ClubService {
         }
         return clubs;
     }
+
+
+    public List<Player> removePlayers(List<Player> players, String clubID) throws SQLException {
+        for(Player player : players){
+            String playerClub = playerRepo.getClubId(player.getId());
+            System.out.println(playerClub);
+            if(Objects.equals(playerClub, clubID)){
+                repo.removePlayerFromClub(player.getId());
+            } else if (playerClub == null){
+                throw new RuntimeException("Player with id " + player.getId() + " not found");
+            } else
+                throw new RowSetWarning("Player is attached to another club");
+        }
+        return repo.getClubPlayer(clubID);
+    }
+
 }

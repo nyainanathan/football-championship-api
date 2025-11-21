@@ -1,76 +1,38 @@
-tempBlocNOte
 
-    @PutMapping("")
-    public ResponseEntity<List<Player>> createOrUpdatePlayers(@RequestBody List<Player> players){
-        try {
-            List<Player> updatedOrCreatedPlayers = service.createOrUpdatePlayers(players);
-            return new  ResponseEntity<>(updatedOrCreatedPlayers, HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-
-  public Player createPlayer(Player player) throws SQLException {
-        String sql = "INSERT INTO players (name, number, position, nationality, age, club_id) VALUES (?, ?, ?, ?, ?, null)";
-        try{
-            Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, player.getName());
-            stmt.setInt(2, player.getNumber());
-            stmt.setString(3, String.valueOf(player.getPosition()));
-            stmt.setString(4, player.getNationality());
-            stmt.setInt(5, player.getAge());
-            ResultSet rs =  stmt.executeQuery();
-            if(rs.next()){
-                conn.close();
-                return playerRowMapper.map(rs);
-            }
-
-        } catch (Exception e){
-            throw e;
-        }
-        return null;
-    }
-
-    public Player updatePlayer(Player player) throws SQLException {
-        String sql = "UPATE players SET name = ? , number = ? , position = ?, age = ? WHERE id = ?";
-        try{
-            Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, player.getName());
-            stmt.setInt(2, player.getNumber());
-            stmt.setString(3, String.valueOf(player.getPosition()));
-            stmt.setInt(4, player.getAge());
-            stmt.setString(5, player.getId());
-            ResultSet rs =  stmt.executeQuery();
-
-            if(rs.next()){
-                conn.close();
-                return playerRowMapper.map(rs);
-            }
-        } catch (Exception e){
-            throw e;
-        }
-        return null;
-    }
-
-
-
-    public List<Player> createOrUpdatePlayers(List<Player> players) throws SQLException {
-        System.out.println("andhea");
+    public List<Player> attachPlayers(List<Player> players, String clubID) throws SQLException {
         for(Player player : players){
-            System.out.println("mety aloha iy eto");
-            Player playerBeforeUpdate = repo.getPlayerById(player.getId());
-            System.out.println(playerBeforeUpdate);
-            if(playerBeforeUpdate == null){
-                repo.createPlayer(player);
-                System.out.println("Creation");
+            Player thisPlayer = playerRepo.getPlayerById(player.getId());
+            if(thisPlayer != null){
+                Player createdPlayer = playerRepo.createPlayer(player);
+                repo.attachPlayerToClub(clubID, createdPlayer.getId());
             } else {
-                System.out.println("Updating");
-                repo.updatePlayer(player);
+                String playerClub = playerRepo.getClubId(clubID);
+               if (!Objects.equals(playerClub, clubID)){
+                    throw new RowSetWarning("Player is attached to another club")
+               }
             }
         }
-        return players;
+        return repo.getClubPlayer(clubID);
+    }
+
+    public Player attachPlayerToClub(String clubId, String playerId){
+        String sql = "UPDATE players SET club_id = ?::uuid where id = ?:UUID RETURNING *";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, clubId);
+            stmt.setString(2,playerId);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                Player player = playerRowMapper.map(rs);
+                conn.close();
+                return player;
+            }
+        } catch(Exception e){
+            e.getStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return null;
     }

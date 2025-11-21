@@ -67,7 +67,16 @@ public class ClubController {
         }
     }
 
-
+    @PutMapping("/{clubId}/players")
+    public ResponseEntity<List<Player>> removePlayerFromClub(@PathVariable String clubId, @RequestBody List<Player> players){
+        try{
+            List<Player> removedPlayers = service.removePlayers(players, clubId);
+            return new ResponseEntity<>(removedPlayers, HttpStatus.OK);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }
