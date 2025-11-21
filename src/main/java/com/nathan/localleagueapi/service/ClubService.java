@@ -2,6 +2,7 @@ package com.nathan.localleagueapi.service;
 
 import com.nathan.localleagueapi.mapper.PlayerRowMapper;
 import com.nathan.localleagueapi.model.Club;
+import com.nathan.localleagueapi.model.ClubStatics;
 import com.nathan.localleagueapi.model.Player;
 import com.nathan.localleagueapi.repository.ClubRepo;
 import com.nathan.localleagueapi.repository.CoachRepo;
@@ -94,5 +95,9 @@ public class ClubService {
             }
         }
         return repo.getClubPlayer(clubID);
+    }
+
+    public List<ClubStatics> getAllClubStats(boolean hasToBeClassified, String season) throws SQLException {
+        return repo.getAllClubsStats(hasToBeClassified, season);
     }
 }

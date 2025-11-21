@@ -1,6 +1,7 @@
 package com.nathan.localleagueapi.controller;
 
 import com.nathan.localleagueapi.model.Club;
+import com.nathan.localleagueapi.model.ClubStatics;
 import com.nathan.localleagueapi.model.Player;
 import com.nathan.localleagueapi.service.ClubService;
 import lombok.AllArgsConstructor;
@@ -89,5 +90,16 @@ public class ClubController {
         }
     }
 
+    @GetMapping("/statistics/{seasonYear}")
+    public ResponseEntity<List<ClubStatics>> getClubStats(@PathVariable String seasonYear, @RequestParam(required = false) boolean hasToBeClassified){
+        try{
+            System.out.println(hasToBeClassified);
+            List<ClubStatics> stats = service.getAllClubStats(hasToBeClassified, seasonYear);
+            return new ResponseEntity<>(stats, HttpStatus.OK);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

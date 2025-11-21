@@ -1,7 +1,9 @@
 package com.nathan.localleagueapi.repository;
 
+import com.nathan.localleagueapi.mapper.ClubStatRowMapper;
 import com.nathan.localleagueapi.mapper.PlayerRowMapper;
 import com.nathan.localleagueapi.model.Club;
+import com.nathan.localleagueapi.model.ClubStatics;
 import com.nathan.localleagueapi.model.Coach;
 import com.nathan.localleagueapi.model.Player;
 import lombok.AllArgsConstructor;
@@ -11,7 +13,9 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +25,7 @@ public class ClubRepo {
 
     private final DataSource dataSource;
     private final PlayerRowMapper playerRowMapper;
+    private final ClubStatRowMapper  clubStatRowMapper;
 
     public List<Club> getAllClubs(){
         String sql = "select clubs.*, coaches.* from clubs join coaches on clubs.coach_id = coaches.id";
@@ -188,8 +193,6 @@ public class ClubRepo {
             if(rs.next()){
                 System.out.println("there is a result set");
                 return playerRowMapper.map(rs);
-//                conn.close();
-//                return player;
             }
         } catch(Exception e){
             e.getStackTrace();
@@ -197,6 +200,40 @@ public class ClubRepo {
         }
 
         return null;
+    }
+
+    //Stats
+    public List<ClubStatics> getAllClubsStats(boolean hasToBeClassified, String season) throws SQLException {
+        StringBuilder sql = new StringBuilder("select c.*, s.*, co.name as coach_name, co.nationality as coach_nationality from clubs as c inner join clubs_statistics as s on c.id = s.id inner join coaches as co on c.coach_id = co.id where season = ? order by ");
+        if(isClassified){
+            sql.append("s.ranking_point desc");
+        } else {
+            sql.append("c.name asc");
+        }
+        String finalSql = sql.toString();
+        try{
+            List<ClubStatics> stats = new   ArrayList<>();
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(finalSql);
+            stmt.setString(1, season);
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                stats.add(clubStatRowMapper.map(rs));
+            }
+            conn.close();
+            return isClassified ?  stats.stream()
+                    .sorted(
+                            Comparator.comparing(ClubStatics::getRankingPoint)
+                                    .thenComparing(ClubStatics::getDifferenceGoals)
+                                    .thenComparing(ClubStatics::getCleanSheetNumber)
+                                    .reversed()
+                    )
+                    .toList() : stats;
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
     }
 
 }
