@@ -47,7 +47,7 @@ public class PlayerRepo {
             ResultSet rs =  stmt.executeQuery();
 
             if(rs.next()){
-                conn.close();
+//                conn.close();
                 return playerRowMapper.map(rs);
             }
         } catch(Exception e){
@@ -80,7 +80,7 @@ public class PlayerRepo {
     }
 
     public Player updatePlayer(Player player) throws SQLException {
-        String sql = "UPATE players SET name = ? , number = ? , position = ?, age = ? WHERE id = ?";
+        String sql = "UPDATE players SET name = ? , number = ? , position = ?, age = ? WHERE id = ?";
         try{
             Connection conn = dataSource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);

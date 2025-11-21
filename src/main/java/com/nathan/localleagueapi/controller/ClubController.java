@@ -78,5 +78,16 @@ public class ClubController {
         }
     }
 
+    @PostMapping("/{clubId}/players")
+    public ResponseEntity<List<Player>> attachPlayerToCLub(@PathVariable String clubId, @RequestBody List<Player> players){
+        try {
+            List<Player> allPlayers = service.attachPlayers(players, clubId);
+            return new ResponseEntity<>(allPlayers, HttpStatus.OK);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

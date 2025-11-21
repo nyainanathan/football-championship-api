@@ -176,6 +176,28 @@ public class ClubRepo {
         return null;
     }
 
+    public Player attachPlayerToClub(String clubId, String playerId){
+        String sql = "UPDATE players SET club_id = ?::uuid where id = ?::UUID RETURNING *";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, clubId);
+            stmt.setString(2,playerId);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                System.out.println("there is a result set");
+                return playerRowMapper.map(rs);
+//                conn.close();
+//                return player;
+            }
+        } catch(Exception e){
+            e.getStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
 
 }
 

@@ -1,38 +1,3 @@
 
-    public List<Player> attachPlayers(List<Player> players, String clubID) throws SQLException {
-        for(Player player : players){
-            Player thisPlayer = playerRepo.getPlayerById(player.getId());
-            if(thisPlayer != null){
-                Player createdPlayer = playerRepo.createPlayer(player);
-                repo.attachPlayerToClub(clubID, createdPlayer.getId());
-            } else {
-                String playerClub = playerRepo.getClubId(clubID);
-               if (!Objects.equals(playerClub, clubID)){
-                    throw new RowSetWarning("Player is attached to another club")
-               }
-            }
-        }
-        return repo.getClubPlayer(clubID);
-    }
 
-    public Player attachPlayerToClub(String clubId, String playerId){
-        String sql = "UPDATE players SET club_id = ?::uuid where id = ?:UUID RETURNING *";
-        try{
-            Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, clubId);
-            stmt.setString(2,playerId);
-            ResultSet rs = stmt.executeQuery();
 
-            if(rs.next()){
-                Player player = playerRowMapper.map(rs);
-                conn.close();
-                return player;
-            }
-        } catch(Exception e){
-            e.getStackTrace();
-            throw new RuntimeException(e);
-        }
-
-        return null;
-    }
