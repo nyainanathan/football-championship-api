@@ -10,6 +10,7 @@ import com.nathan.localleagueapi.repository.MatchRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class MatchService {
     private ClubRepo clubRepo;
     private MatchRepo matchRepo;
 
-    public List<Match> createSeasonMatch(String season){
+    public List<Match> createSeasonMatch(String season) throws SQLException {
         List<Match> seasonMatch = new ArrayList<>();
         List<ClubMinimumInfo> clubs = clubRepo.getAllClubsMinimumInfo();
         List<Club> clubsFullInfo = clubRepo.getAllClubs();
@@ -130,8 +131,7 @@ public class MatchService {
             }
 
         seasonMatch.addAll(secondLegMatches);
-        System.out.println(seasonMatch.size());
+        matchRepo.createMatch(seasonMatch, season);
         return seasonMatch;
-
     }
 }
