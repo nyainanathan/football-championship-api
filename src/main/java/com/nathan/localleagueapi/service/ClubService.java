@@ -1,6 +1,7 @@
 package com.nathan.localleagueapi.service;
 
 import com.nathan.localleagueapi.model.club.Club;
+import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
 import com.nathan.localleagueapi.model.club.ClubStatics;
 import com.nathan.localleagueapi.model.player.Player;
 import com.nathan.localleagueapi.repository.ClubRepo;
@@ -56,6 +57,9 @@ public class ClubService {
         return clubs;
     }
 
+    public List<ClubMinimumInfo> getAllClubsMinimalInfo(){
+        return repo.getAllClubsMinimumInfo();
+    }
 
     public List<Player> removePlayers(List<Player> players, String clubID) throws SQLException {
         for(Player player : players){

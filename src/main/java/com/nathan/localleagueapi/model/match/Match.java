@@ -16,6 +16,6 @@ public class Match {
     private MatchClub homeClub;
     private MatchClub AwayClub;
     private String stadium;
-    private Instant matchaDate;
+    private Instant matchDate;
     private Status status;
 }

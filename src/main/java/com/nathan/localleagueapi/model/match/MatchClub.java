@@ -1,6 +1,6 @@
 package com.nathan.localleagueapi.model.match;
 
-import com.nathan.localleagueapi.model.club.CLubMinimumInfo;
+import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MatchClub extends CLubMinimumInfo {
+public class MatchClub extends ClubMinimumInfo {
     private int score;
     private List<Scorer> scorers;
 

@@ -1,13 +1,16 @@
 package com.nathan.localleagueapi.repository;
 
+import com.nathan.localleagueapi.mapper.ClubMinimalInfoRowMapper;
 import com.nathan.localleagueapi.mapper.ClubRowMapper;
 import com.nathan.localleagueapi.mapper.ClubStatRowMapper;
 import com.nathan.localleagueapi.mapper.PlayerRowMapper;
 import com.nathan.localleagueapi.model.club.Club;
+import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
 import com.nathan.localleagueapi.model.club.ClubStatics;
 import com.nathan.localleagueapi.model.club.Coach;
 import com.nathan.localleagueapi.model.player.Player;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -20,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class ClubRepo {
@@ -28,7 +32,7 @@ public class ClubRepo {
     private final PlayerRowMapper playerRowMapper;
     private final ClubStatRowMapper  clubStatRowMapper;
     private final ClubRowMapper clubRowMapper;
-
+    private final ClubMinimalInfoRowMapper clubMinimalInfoRowMapper;
     public List<Club> getAllClubs(){
         String sql = "select clubs.*, coaches.* from clubs join coaches on clubs.coach_id = coaches.id";
         List<Club> clubs = new ArrayList<>();
@@ -181,6 +185,22 @@ public class ClubRepo {
         return null;
     }
 
+    public List<ClubMinimumInfo> getAllClubsMinimumInfo(){
+        String sql = "SELECT * FROM clubs";
+        try{
+            List<ClubMinimumInfo> clubs = new  ArrayList<>();
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                clubs.add(clubMinimalInfoRowMapper.map(rs));
+            }
+            conn.close();
+            return clubs;
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
     //Stats
     public List<ClubStatics> getAllClubsStats(boolean hasToBeClassified, String season) throws SQLException {
         StringBuilder sql = new StringBuilder("select c.*, s.*, co.name as coach_name, co.nationality as coach_nationality from clubs as c inner join clubs_statistics as s on c.id = s.id inner join coaches as co on c.coach_id = co.id where season = ? order by ");

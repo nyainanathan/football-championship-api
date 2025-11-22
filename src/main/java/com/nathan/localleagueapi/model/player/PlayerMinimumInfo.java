@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.dto;
+package com.nathan.localleagueapi.model.player;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ClubMinimumInfo {
+public class PlayerMinimumInfo {
     private String id;
     private String name;
-    private String acronym;
+    private int number;
 }

@@ -1,6 +1,7 @@
 package com.nathan.localleagueapi.controller;
 
 import com.nathan.localleagueapi.model.club.Club;
+import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
 import com.nathan.localleagueapi.model.club.ClubStatics;
 import com.nathan.localleagueapi.model.player.Player;
 import com.nathan.localleagueapi.service.ClubService;
@@ -33,6 +34,16 @@ public class ClubController {
         }
     }
 
+    @GetMapping("/mini")
+    public ResponseEntity<List<ClubMinimumInfo>> getAllClubsMinimalInfo(){
+        try{
+            List<ClubMinimumInfo> clubs = service.getAllClubsMinimalInfo();
+            return new ResponseEntity<>(clubs, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/{clubId}/players")
     public ResponseEntity<List<Player>> getClubPlayers(@PathVariable String clubId){
