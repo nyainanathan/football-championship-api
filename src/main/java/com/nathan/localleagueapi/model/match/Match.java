@@ -13,8 +13,8 @@ import java.time.Instant;
 @AllArgsConstructor
 public class Match {
     private String id;
-    private Club homeClub;
-    private Club AwayClub;
+    private MatchClub homeClub;
+    private MatchClub AwayClub;
     private String stadium;
     private Instant matchaDate;
     private Status status;

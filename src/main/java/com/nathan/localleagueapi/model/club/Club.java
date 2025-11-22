@@ -6,12 +6,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class Club {
-    private String id;
-    private String name;
-    private String acronym;
+public class Club  extends CLubMinimumInfo{
+
     private int yearCreation;
     private String stadium;
     private Coach coach;
+
+    public Club(String id, String name, String acronym, int yearCreation, String stadium, Coach coach) {
+        super(id, name, acronym);
+        this.yearCreation = yearCreation;
+        this.stadium = stadium;
+        this.coach = coach;
+    }
 }
