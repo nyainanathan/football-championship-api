@@ -1,8 +1,11 @@
 package com.nathan.localleagueapi.model.club;
 
+import com.nathan.localleagueapi.model.match.Scorer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
