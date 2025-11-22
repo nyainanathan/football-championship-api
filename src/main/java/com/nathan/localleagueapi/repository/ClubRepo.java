@@ -2,10 +2,10 @@ package com.nathan.localleagueapi.repository;
 
 import com.nathan.localleagueapi.mapper.ClubStatRowMapper;
 import com.nathan.localleagueapi.mapper.PlayerRowMapper;
-import com.nathan.localleagueapi.model.Club;
-import com.nathan.localleagueapi.model.ClubStatics;
-import com.nathan.localleagueapi.model.Coach;
-import com.nathan.localleagueapi.model.Player;
+import com.nathan.localleagueapi.model.club.Club;
+import com.nathan.localleagueapi.model.club.ClubStatics;
+import com.nathan.localleagueapi.model.club.Coach;
+import com.nathan.localleagueapi.model.player.Player;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -205,7 +205,7 @@ public class ClubRepo {
     //Stats
     public List<ClubStatics> getAllClubsStats(boolean hasToBeClassified, String season) throws SQLException {
         StringBuilder sql = new StringBuilder("select c.*, s.*, co.name as coach_name, co.nationality as coach_nationality from clubs as c inner join clubs_statistics as s on c.id = s.id inner join coaches as co on c.coach_id = co.id where season = ? order by ");
-        if(isClassified){
+        if(hasToBeClassified){
             sql.append("s.ranking_point desc");
         } else {
             sql.append("c.name asc");
@@ -222,7 +222,7 @@ public class ClubRepo {
                 stats.add(clubStatRowMapper.map(rs));
             }
             conn.close();
-            return isClassified ?  stats.stream()
+            return hasToBeClassified ?  stats.stream()
                     .sorted(
                             Comparator.comparing(ClubStatics::getRankingPoint)
                                     .thenComparing(ClubStatics::getDifferenceGoals)

@@ -2,6 +2,9 @@ package com.nathan.localleagueapi.repository;
 
 import com.nathan.localleagueapi.mapper.PlayerRowMapper;
 import com.nathan.localleagueapi.model.*;
+import com.nathan.localleagueapi.model.player.Player;
+import com.nathan.localleagueapi.model.player.PlayerStatistic;
+import com.nathan.localleagueapi.model.player.PlayingTime;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 

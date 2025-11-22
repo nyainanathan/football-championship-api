@@ -1,5 +1,7 @@
-package com.nathan.localleagueapi.model;
+package com.nathan.localleagueapi.model.match;
 
+import com.nathan.localleagueapi.model.Status;
+import com.nathan.localleagueapi.model.club.Club;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,5 +17,5 @@ public class Match {
     private Club AwayClub;
     private String stadium;
     private Instant matchaDate;
-    private Status  status;
+    private Status status;
 }

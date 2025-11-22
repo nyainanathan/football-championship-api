@@ -1,7 +1,7 @@
 package com.nathan.localleagueapi.service;
 
-import com.nathan.localleagueapi.model.Player;
-import com.nathan.localleagueapi.model.PlayerStatistic;
+import com.nathan.localleagueapi.model.player.Player;
+import com.nathan.localleagueapi.model.player.PlayerStatistic;
 import com.nathan.localleagueapi.repository.PlayerRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

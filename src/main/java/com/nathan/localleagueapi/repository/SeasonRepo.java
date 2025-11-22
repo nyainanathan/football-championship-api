@@ -1,7 +1,7 @@
 package com.nathan.localleagueapi.repository;
 
 import com.nathan.localleagueapi.dto.CreateSeason;
-import com.nathan.localleagueapi.model.Season;
+import com.nathan.localleagueapi.model.season.Season;
 import com.nathan.localleagueapi.model.Status;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;

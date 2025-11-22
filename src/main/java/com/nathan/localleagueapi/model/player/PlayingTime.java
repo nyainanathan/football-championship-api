@@ -1,5 +1,6 @@
-package com.nathan.localleagueapi.model;
+package com.nathan.localleagueapi.model.player;
 
+import com.nathan.localleagueapi.model.DurationUnit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

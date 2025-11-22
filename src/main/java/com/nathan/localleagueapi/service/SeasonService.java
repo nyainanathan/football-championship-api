@@ -1,7 +1,7 @@
 package com.nathan.localleagueapi.service;
 
 import com.nathan.localleagueapi.dto.CreateSeason;
-import com.nathan.localleagueapi.model.Season;
+import com.nathan.localleagueapi.model.season.Season;
 import com.nathan.localleagueapi.model.Status;
 import com.nathan.localleagueapi.repository.SeasonRepo;
 import lombok.AllArgsConstructor;

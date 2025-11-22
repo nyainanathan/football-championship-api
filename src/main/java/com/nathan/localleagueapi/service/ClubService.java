@@ -1,9 +1,8 @@
 package com.nathan.localleagueapi.service;
 
-import com.nathan.localleagueapi.mapper.PlayerRowMapper;
-import com.nathan.localleagueapi.model.Club;
-import com.nathan.localleagueapi.model.ClubStatics;
-import com.nathan.localleagueapi.model.Player;
+import com.nathan.localleagueapi.model.club.Club;
+import com.nathan.localleagueapi.model.club.ClubStatics;
+import com.nathan.localleagueapi.model.player.Player;
 import com.nathan.localleagueapi.repository.ClubRepo;
 import com.nathan.localleagueapi.repository.CoachRepo;
 import com.nathan.localleagueapi.repository.PlayerRepo;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.RowSetWarning;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;

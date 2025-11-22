@@ -1,7 +1,7 @@
 package com.nathan.localleagueapi.mapper;
 
-import com.nathan.localleagueapi.model.ClubStatics;
-import com.nathan.localleagueapi.model.Coach;
+import com.nathan.localleagueapi.model.club.ClubStatics;
+import com.nathan.localleagueapi.model.club.Coach;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;

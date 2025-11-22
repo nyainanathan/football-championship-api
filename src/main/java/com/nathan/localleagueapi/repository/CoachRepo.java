@@ -1,7 +1,7 @@
 package com.nathan.localleagueapi.repository;
 
 
-import com.nathan.localleagueapi.model.Coach;
+import com.nathan.localleagueapi.model.club.Coach;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 

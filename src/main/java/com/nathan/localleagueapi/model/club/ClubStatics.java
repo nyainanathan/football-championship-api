@@ -1,4 +1,4 @@
-package com.nathan.localleagueapi.model;
+package com.nathan.localleagueapi.model.club;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class ClubStatics extends  Club {
+public class ClubStatics extends Club {
     private int rankingPoint;
     private int scoredGoals;
     private int concedeGoals;

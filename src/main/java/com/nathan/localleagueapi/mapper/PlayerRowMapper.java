@@ -1,7 +1,7 @@
 package com.nathan.localleagueapi.mapper;
 
-import com.nathan.localleagueapi.model.Player;
-import com.nathan.localleagueapi.model.PlayerPosition;
+import com.nathan.localleagueapi.model.player.Player;
+import com.nathan.localleagueapi.model.player.PlayerPosition;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;

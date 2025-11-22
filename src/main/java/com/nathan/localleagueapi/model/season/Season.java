@@ -1,5 +1,6 @@
-package com.nathan.localleagueapi.model;
+package com.nathan.localleagueapi.model.season;
 
+import com.nathan.localleagueapi.model.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

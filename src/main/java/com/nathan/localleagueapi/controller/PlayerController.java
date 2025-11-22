@@ -1,7 +1,7 @@
 package com.nathan.localleagueapi.controller;
 
-import com.nathan.localleagueapi.model.Player;
-import com.nathan.localleagueapi.model.PlayerStatistic;
+import com.nathan.localleagueapi.model.player.Player;
+import com.nathan.localleagueapi.model.player.PlayerStatistic;
 import com.nathan.localleagueapi.service.PlayerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

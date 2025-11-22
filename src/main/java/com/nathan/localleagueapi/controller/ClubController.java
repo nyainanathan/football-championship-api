@@ -1,8 +1,8 @@
 package com.nathan.localleagueapi.controller;
 
-import com.nathan.localleagueapi.model.Club;
-import com.nathan.localleagueapi.model.ClubStatics;
-import com.nathan.localleagueapi.model.Player;
+import com.nathan.localleagueapi.model.club.Club;
+import com.nathan.localleagueapi.model.club.ClubStatics;
+import com.nathan.localleagueapi.model.player.Player;
 import com.nathan.localleagueapi.service.ClubService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
