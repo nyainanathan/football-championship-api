@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CLubMinimumInfo{
+public class ClubMinimumInfo{
     private final String id;
     private final String name;
     private final String acronym;

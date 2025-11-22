@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Club  extends CLubMinimumInfo{
+public class Club  extends ClubMinimumInfo{
 
     private int yearCreation;
     private String stadium;

@@ -1,5 +1,6 @@
 package com.nathan.localleagueapi.repository;
 
+import com.nathan.localleagueapi.mapper.ClubRowMapper;
 import com.nathan.localleagueapi.mapper.ClubStatRowMapper;
 import com.nathan.localleagueapi.mapper.PlayerRowMapper;
 import com.nathan.localleagueapi.model.club.Club;
@@ -26,6 +27,7 @@ public class ClubRepo {
     private final DataSource dataSource;
     private final PlayerRowMapper playerRowMapper;
     private final ClubStatRowMapper  clubStatRowMapper;
+    private final ClubRowMapper clubRowMapper;
 
     public List<Club> getAllClubs(){
         String sql = "select clubs.*, coaches.* from clubs join coaches on clubs.coach_id = coaches.id";
@@ -38,19 +40,7 @@ public class ClubRepo {
 
             while(rs.next()){
 
-                clubs.add(
-                        new Club(
-                                rs.getString("id"),
-                                rs.getString("name"),
-                                rs.getString("acronym"),
-                                rs.getInt("year_creation"),
-                                rs.getString("stadium"),
-                                new Coach(
-                                        rs.getString(8),
-                                        rs.getString(9)
-                                )
-                        )
-                );
+                clubs.add(clubRowMapper.map(rs));
             }
 
             return clubs;
@@ -70,18 +60,7 @@ public class ClubRepo {
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
-
-                return new Club(
-                        rs.getString("id"),
-                        rs.getString("name"),
-                        rs.getString("acronym"),
-                        rs.getInt("year_creation"),
-                        rs.getString("stadium"),
-                        new Coach(
-                                rs.getString(8),
-                                rs.getString(9)
-                        )
-                );
+                return clubRowMapper.map(rs);
             }
         } catch(Exception e){
             throw new RuntimeException(e);
