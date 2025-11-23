@@ -45,6 +45,17 @@ public class ClubController {
         }
     }
 
+    @GetMapping("/mini/{clubId}")
+    public ResponseEntity<ClubMinimumInfo> getOneClubMinimalIndo(@PathVariable String clubId){
+        try{
+            ClubMinimumInfo club = service.getOneClubMinimalInfo(clubId);
+            return new ResponseEntity<>(club, HttpStatus.OK);
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/{clubId}/players")
     public ResponseEntity<List<Player>> getClubPlayers(@PathVariable String clubId){
         try{

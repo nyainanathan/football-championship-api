@@ -102,4 +102,8 @@ public class ClubService {
     public List<ClubStatics> getAllClubStats(boolean hasToBeClassified, String season) throws SQLException {
         return repo.getAllClubsStats(hasToBeClassified, season);
     }
+
+    public ClubMinimumInfo getOneClubMinimalInfo(String clubId) {
+        return repo.getOneClubMinimumInfo(clubId);
+    }
 }

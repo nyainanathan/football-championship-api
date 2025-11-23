@@ -35,7 +35,6 @@ public class ClubRepo {
     private final ClubStatRowMapper  clubStatRowMapper;
     private final ClubRowMapper clubRowMapper;
     private final ClubMinimalInfoRowMapper clubMinimalInfoRowMapper;
-    private final MatchRepo matchRepo;
 
 
     public List<Club> getAllClubs(){
@@ -191,7 +190,7 @@ public class ClubRepo {
     }
 
     public ClubMinimumInfo getOneClubMinimumInfo(String clubId){
-        String sql = "SELECT id, name, acronym FROM clubs WHERE id = ?";
+        String sql = "SELECT id, name, acronym FROM clubs WHERE id = ?::uuid";
         try{
             Connection conn = dataSource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
