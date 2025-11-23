@@ -190,8 +190,26 @@ public class ClubRepo {
         return null;
     }
 
+    public ClubMinimumInfo getOneClubMinimumInfo(String clubId){
+        String sql = "SELECT id, name, acronym FROM clubs WHERE id = ?";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, clubId);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                return clubMinimalInfoRowMapper.map(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
     public List<ClubMinimumInfo> getAllClubsMinimumInfo(){
-        String sql = "SELECT * FROM clubs";
+        String sql = "SELECT id, name, acronym FROM clubs";
         try{
             List<ClubMinimumInfo> clubs = new  ArrayList<>();
             Connection conn = dataSource.getConnection();
