@@ -138,6 +138,6 @@ public class MatchService {
     }
 
     public List<MatchRawData> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
-        return clubRepo.getSeasonMatch(season, filters);
+        return matchRepo.getSeasonMatch(season, filters);
     }
 }

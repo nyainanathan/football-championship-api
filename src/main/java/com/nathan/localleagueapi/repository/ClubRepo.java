@@ -35,6 +35,8 @@ public class ClubRepo {
     private final ClubStatRowMapper  clubStatRowMapper;
     private final ClubRowMapper clubRowMapper;
     private final ClubMinimalInfoRowMapper clubMinimalInfoRowMapper;
+    private final MatchRepo matchRepo;
+
 
     public List<Club> getAllClubs(){
         String sql = "select clubs.*, coaches.* from clubs join coaches on clubs.coach_id = coaches.id";
@@ -205,67 +207,7 @@ public class ClubRepo {
         }
     }
 
-    public List<MatchRawData> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
-        List<Match> matches = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM matches where season = ? ");
 
-        System.out.println(filters.toString());
-
-        if(filters.getMatchAfter() != null){
-            sql.append(" and match_date > ?::timestamp ");
-        }
-        if(filters.getMatchBeforeOrEquals() != null){
-            sql.append(" and match_date <= ?::timestamp ");
-        }
-        if(filters.getMatchStatus() != null){
-            sql.append(" and actual_status = ?::status_enum ");
-        }
-        System.out.println(sql.toString());
-        try{
-            Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql.toString());
-            stmt.setString(1, season);
-            int filter = 2;
-
-            if(filters.getMatchAfter() != null){
-                System.out.println("gotMatchAfter");
-                stmt.setString(filter, filters.getMatchAfter().toString());
-                filter++;
-            }
-
-            if(filters.getMatchBeforeOrEquals() != null){
-                System.out.println("gotMatchBefore");
-                stmt.setString(filter, String.valueOf(Timestamp.from(Instant.parse(filters.getMatchBeforeOrEquals().toString()))));
-                filter++;
-            }
-
-            if(filters.getMatchStatus() != null){
-                System.out.println("gotMatchStatus");
-                stmt.setString(filter, filters.getMatchStatus().toString());
-                filter++;
-            }
-
-            ResultSet rs = stmt.executeQuery();
-
-            List<MatchRawData> matchData = new  ArrayList<>();
-            while(rs.next()){
-                matchData.add(
-                        new  MatchRawData(
-                            rs.getString("id"),
-                                rs.getString("club_home"),
-                                rs.getString("club_away"),
-                                rs.getString("stadium"),
-                                Instant.parse(rs.getString("match_date").substring(0,10) + "T" + rs.getString("match_date").substring(11,19) + ".00Z"),
-                                Status.valueOf(rs.getString("actual_status")),
-                                rs.getString("season")
-                        )
-                );
-            }
-            return matchData;
-        } catch (Exception e){
-            throw e;
-        }
-    }
     //Stats
     public List<ClubStatics> getAllClubsStats(boolean hasToBeClassified, String season) throws SQLException {
         StringBuilder sql = new StringBuilder("select c.*, s.*, co.name as coach_name, co.nationality as coach_nationality from clubs as c inner join clubs_statistics as s on c.id = s.id inner join coaches as co on c.coach_id = co.id where season = ? order by ");

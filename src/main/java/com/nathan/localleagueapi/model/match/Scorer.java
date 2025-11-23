@@ -13,4 +13,5 @@ public class Scorer {
     private PlayerMinimumInfo player;
     private int minuteOfGoal;
     private boolean ownGoal;
+    private String clubId;
 }
