@@ -8,7 +8,18 @@ import java.time.Instant;
 
 @Getter
 @Setter
+
 public class MatchFilter {
+    @Override
+    public String toString() {
+        return "MatchFilter{" +
+                "matchStatus=" + matchStatus +
+                ", clubPlayingName='" + clubPlayingName + '\'' +
+                ", matchAfter=" + matchAfter +
+                ", matchBeforeOrEquals=" + matchBeforeOrEquals +
+                '}';
+    }
+
     private Status matchStatus;
     private String clubPlayingName;
     private Instant matchAfter;

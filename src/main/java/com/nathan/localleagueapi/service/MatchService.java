@@ -1,5 +1,7 @@
 package com.nathan.localleagueapi.service;
 
+import com.nathan.localleagueapi.dto.MatchFilter;
+import com.nathan.localleagueapi.dto.MatchRawData;
 import com.nathan.localleagueapi.model.Status;
 import com.nathan.localleagueapi.model.club.Club;
 import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
@@ -133,5 +135,9 @@ public class MatchService {
         seasonMatch.addAll(secondLegMatches);
         matchRepo.createMatch(seasonMatch, season);
         return seasonMatch;
+    }
+
+    public List<MatchRawData> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
+        return clubRepo.getSeasonMatch(season, filters);
     }
 }
