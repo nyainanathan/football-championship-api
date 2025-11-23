@@ -13,6 +13,11 @@ public class MatchClub extends ClubMinimumInfo {
     private int score;
     private List<Scorer> scorers;
 
+    public MatchClub(ClubMinimumInfo clubMinimumInfo) {
+        super(clubMinimumInfo.getId(), clubMinimumInfo.getName(), clubMinimumInfo.getAcronym());
+
+    }
+
     public MatchClub(String id, String name, String acronym) {
         super(id, name, acronym);
         score = 0;
