@@ -198,7 +198,9 @@ public class ClubRepo {
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
-                return clubMinimalInfoRowMapper.map(rs);
+                ClubMinimumInfo info =  clubMinimalInfoRowMapper.map(rs);
+                conn.close();
+                return info;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

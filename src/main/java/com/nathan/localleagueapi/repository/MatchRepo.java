@@ -5,6 +5,7 @@ import com.nathan.localleagueapi.dto.MatchRawData;
 import com.nathan.localleagueapi.model.Status;
 import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
 import com.nathan.localleagueapi.model.match.Match;
+import com.nathan.localleagueapi.model.match.MatchClub;
 import com.nathan.localleagueapi.model.match.Scorer;
 import com.nathan.localleagueapi.model.player.PlayerMinimumInfo;
 import lombok.AllArgsConstructor;
@@ -45,7 +46,7 @@ public class MatchRepo {
     public List<Scorer> getScorers(String matchId, String teamId)  throws SQLException {
         List<Scorer> scorers = new ArrayList<>();
         try{
-            String sql = "select g.*, p.id as player_id, p.name, p.number from goals as g inner join players as p on g.player_id = p.id where g.match_id = ? and g.club_id = ?";
+            String sql = "select g.*, p.id as player_id, p.name, p.number from goals as g inner join players as p on g.player_id = p.id where g.match_id = ?::uuid and g.club_id = ?::uuid";
             Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, matchId);
@@ -63,6 +64,7 @@ public class MatchRepo {
                         rs.getString("club_id")
                 ));
             }
+            connection.close();
         } catch (SQLException e){
             e.printStackTrace();
             throw e;
@@ -70,7 +72,7 @@ public class MatchRepo {
         return scorers;
     }
 
-    public List<MatchRawData> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
+    public List<Match> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
         List<Match> matches = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM matches where season = ? ");
 
@@ -129,13 +131,44 @@ public class MatchRepo {
                 );
             }
 
+            conn.close();
+//            for(MatchRawData rawData : matchData){
+//                System.out.println(rawData.toString());
+//            }
+
             for(MatchRawData data :  matchData){
                 //Home team
+                MatchClub homeClub = new MatchClub(clubRepo.getOneClubMinimumInfo(data.getClubHomeId()));
+                MatchClub awayClub = new MatchClub(clubRepo.getOneClubMinimumInfo(data.getClubAwayId()));
 
+                List<Scorer> homeScorers = this.getScorers(data.getId(), homeClub.getId());
+                System.out.println("Breakpoint");
+                List<Scorer>  awayScorers = this.getScorers(data.getId(), awayClub.getId());
+
+                homeClub.setScorers(homeScorers);
+                awayClub.setScorers(awayScorers);
+
+                homeClub.setScore(homeScorers.size());
+                awayClub.setScore(awayScorers.size());
+
+                matches.add(
+                        new Match(
+                            data.getId(),
+                                homeClub,
+                                awayClub,
+                                data.getStadium(),
+                                data.getMatchDate(),
+                                data.getActualStatus()
+                        )
+                );
+
+                for(Match m : matches){
+                    System.out.println(m.toString());
+                }
             }
 
 
-            return matchData;
+            return matches;
         } catch (Exception e){
             throw e;
         }

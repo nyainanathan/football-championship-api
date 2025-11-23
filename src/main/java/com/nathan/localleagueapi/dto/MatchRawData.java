@@ -16,4 +16,17 @@ public class MatchRawData {
     private Instant matchDate;
     private Status actualStatus;
     private String season;
+
+    @Override
+    public String toString() {
+        return "MatchRawData{" +
+                "id='" + id + '\'' +
+                ", clubHomeId='" + clubHomeId + '\'' +
+                ", clubAwayId='" + clubAwayId + '\'' +
+                ", stadium='" + stadium + '\'' +
+                ", matchDate=" + matchDate +
+                ", actualStatus=" + actualStatus +
+                ", season='" + season + '\'' +
+                '}';
+    }
 }

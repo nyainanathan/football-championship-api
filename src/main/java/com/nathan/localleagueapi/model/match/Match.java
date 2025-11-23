@@ -22,4 +22,16 @@ public class Match {
     private String stadium;
     private Instant matchDate;
     private Status status;
+
+    @Override
+    public String toString() {
+        return "Match{" +
+                "id='" + id + '\'' +
+                ", homeClub=" + homeClub +
+                ", AwayClub=" + AwayClub +
+                ", stadium='" + stadium + '\'' +
+                ", matchDate=" + matchDate +
+                ", status=" + status +
+                '}';
     }
+}

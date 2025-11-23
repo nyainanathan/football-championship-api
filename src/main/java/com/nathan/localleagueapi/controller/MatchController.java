@@ -24,11 +24,12 @@ public class MatchController {
     private MatchService service;
 
     @GetMapping("/{seasonYear}")
-    public ResponseEntity<List<MatchRawData>> getMatches(@PathVariable String seasonYear, MatchFilter filters) {
+    public ResponseEntity<List<Match>> getMatches(@PathVariable String seasonYear, MatchFilter filters) {
         try{
-            List<MatchRawData> matches = service.getSeasonMatch(seasonYear, filters);
+            List<Match> matches = service.getSeasonMatch(seasonYear, filters);
             return new ResponseEntity<>(matches, HttpStatus.OK);
         } catch (Exception e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
