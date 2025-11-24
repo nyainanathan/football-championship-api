@@ -198,6 +198,11 @@ public class MatchService {
 
     public Match addGoal(String id, List<NewGoal> goals) throws SQLException {
         Match match = matchRepo.getOneMatch(id);
+
+        if(match.getStatus() != Status.STARTED){
+            throw new SQLException("You can only add a goal to an ongoing match");
+        }
+
         String matchSeason = matchRepo.getOneMatchSeason(match.getId());
 
         Set<String> scorerID = new  HashSet<>();
