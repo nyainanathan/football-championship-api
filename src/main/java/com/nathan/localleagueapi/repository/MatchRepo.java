@@ -152,6 +152,7 @@ public class MatchRepo {
         stmt.executeUpdate();
     }
 
+
     public List<Match> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
         List<Match> matches = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM matches where season = ? ");
@@ -252,4 +253,5 @@ public class MatchRepo {
             throw e;
         }
     }
+
 }

@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -139,5 +140,17 @@ public class MatchService {
 
     public List<Match> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
         return matchRepo.getSeasonMatch(season, filters);
+    }
+
+    public Match updateMatchStatus(String id, Map<String, Status> matchStatus) throws SQLException {
+        Status status = matchRepo.getOneMatchStatus(id);
+        if(matchStatus.get("status") == Status.STARTED && status == Status.NOT_STARTED ){
+            matchRepo.startMatch(id);
+            return matchRepo.getOneMatch(id);
+        } else if (matchStatus.get("status") == Status.FINISHED && status == Status.NOT_STARTED){
+            matchRepo.finishMatch(id);
+            Match match = matchRepo.getOneMatch(id);
+
+        }
     }
 }

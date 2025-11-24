@@ -2,19 +2,19 @@ package com.nathan.localleagueapi.controller;
 
 import com.nathan.localleagueapi.dto.MatchFilter;
 import com.nathan.localleagueapi.dto.MatchRawData;
+import com.nathan.localleagueapi.model.Status;
 import com.nathan.localleagueapi.model.match.Match;
 import com.nathan.localleagueapi.service.MatchService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.YamlProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -30,6 +30,17 @@ public class MatchController {
             return new ResponseEntity<>(matches, HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Match> updateMatchStatus(@PathVariable String id, @RequestBody Map<String, Status> matchStatus) {
+        try{
+            Match updatedMatch = service.updateMatchStatus(id, matchStatus);
+            return new ResponseEntity<>(updatedMatch, HttpStatus.OK);
+        } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

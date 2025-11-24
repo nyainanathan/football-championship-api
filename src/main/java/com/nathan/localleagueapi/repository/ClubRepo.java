@@ -228,6 +228,13 @@ public class ClubRepo {
 
 
     //Stats
+
+    public void updateStatsAfterMatch(Match match){
+        if(match.getHomeClub().getScore() == match.getAwayClub().setScore()){
+
+        }
+    }
+
     public List<ClubStatics> getAllClubsStats(boolean hasToBeClassified, String season) throws SQLException {
         StringBuilder sql = new StringBuilder("select c.*, s.*, co.name as coach_name, co.nationality as coach_nationality from clubs as c inner join clubs_statistics as s on c.id = s.id inner join coaches as co on c.coach_id = co.id where season = ? order by ");
         if(hasToBeClassified){
