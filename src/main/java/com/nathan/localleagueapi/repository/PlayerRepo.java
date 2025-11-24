@@ -1,5 +1,6 @@
 package com.nathan.localleagueapi.repository;
 
+import com.nathan.localleagueapi.dto.PlayerStat;
 import com.nathan.localleagueapi.mapper.PlayerRowMapper;
 import com.nathan.localleagueapi.model.*;
 import com.nathan.localleagueapi.model.player.Player;
@@ -125,6 +126,26 @@ public class PlayerRepo {
     }
 
     //For stats
+    public PlayerStat getOnePlayerStatForASeason(String playerID, String season) throws SQLException {
+      String sql = "SELECT * FROM player_statistics WHERE player_id = ?::uuid AND season = ?";
+      Connection conn = dataSource.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(sql);
+      stmt.setString(1, playerID);
+      stmt.setString(2, season);
+      ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return new PlayerStat(
+                rs.getString("player_id"),
+                    rs.getString("season"),
+                    rs.getInt("scored_goals"),
+                    rs.getInt("playing_time"),
+                    DurationUnit.valueOf(rs.getString("duration_unit"))
+            );
+        }
+        return null;
+    }
+
+
     public PlayerStatistic getPlayerStatisticForSeason(String playerId, String season) throws SQLException {
       String sql = "SELECT * FROM player_statistics WHERE player_id = ?::uuid AND season = ?";
       try{
