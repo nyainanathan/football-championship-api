@@ -72,6 +72,56 @@ public class MatchRepo {
         return scorers;
     }
 
+    public Match getOneMatch(String matchId) throws SQLException {
+        String sql = "SELECT * FROM matches WHERE id = ?::uuid";
+        try{
+            Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, matchId);
+            ResultSet rs = stmt.executeQuery();
+
+            MatchRawData matchRawData = null;
+
+            if(rs.next()){
+                matchRawData = new MatchRawData(
+                    rs.getString("id"),
+                        rs.getString("club_home"),
+                        rs.getString("club_away"),
+                        rs.getString("stadium"),
+                        Instant.parse(rs.getString("match_date")),
+                        Status.valueOf(rs.getString("actual_status")),
+                        rs.getString("season")
+                );
+            }
+
+            conn.close();
+
+            MatchClub homeClub = new MatchClub(clubRepo.getOneClubMinimumInfo(matchRawData.getClubHomeId()));
+            MatchClub awayClub = new MatchClub(clubRepo.getOneClubMinimumInfo(matchRawData.getClubAwayId()));
+
+            List<Scorer> homeScorers = this.getScorers(matchRawData.getId(), homeClub.getId());
+            List<Scorer> awayScorers = this.getScorers(matchRawData.getId(), awayClub.getId());
+
+            homeClub.setScorers(homeScorers);
+            awayClub.setScorers(awayScorers);
+
+            homeClub.setScore(homeScorers.size());
+            awayClub.setScore(awayScorers.size());
+
+            return new Match(
+                    matchRawData.getId(),
+                    homeClub,
+                    awayClub,
+                    matchRawData.getStadium(),
+                    matchRawData.getMatchDate(),
+                    matchRawData.getActualStatus()
+            );
+
+        } catch (Exception e){
+            throw e;
+        }
+    }
+
     public List<Match> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
         List<Match> matches = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM matches where season = ? ");
