@@ -122,6 +122,18 @@ public class MatchRepo {
         }
     }
 
+    public Status getOneMatchStatus(String matchId) throws SQLException {
+        String sql = "SELECT actual_status FROM matches WHERE id = ?::uuid";
+        Connection conn = dataSource.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, matchId);
+        ResultSet rs = stmt.executeQuery();
+        if(rs.next()){
+            return Status.valueOf(rs.getString("actual_status"));
+        }
+        return null;
+    }
+
     public List<Match> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
         List<Match> matches = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM matches where season = ? ");
