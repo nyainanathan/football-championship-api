@@ -1,5 +1,6 @@
 package com.nathan.localleagueapi.service;
 
+import com.nathan.localleagueapi.dto.ClubStat;
 import com.nathan.localleagueapi.dto.MatchFilter;
 import com.nathan.localleagueapi.dto.MatchRawData;
 import com.nathan.localleagueapi.model.Status;
@@ -142,6 +143,37 @@ public class MatchService {
         return matchRepo.getSeasonMatch(season, filters);
     }
 
+    public void updateStatsAfterMatch(Match match) throws SQLException {
+        ClubStat awayStat = clubRepo.getOneClubStatics(match.getAwayClub().getId());
+        ClubStat homeStat = clubRepo.getOneClubStatics(match.getHomeClub().getId());
+        if(match.getHomeClub().getScore() == match.getAwayClub().getScore()) {
+            homeStat.setRankingPoint(homeStat.getRankingPoint() + 1);
+            awayStat.setRankingPoint(awayStat.getRankingPoint() + 1);
+        } else if (match.getHomeClub().getScore() > match.getAwayClub().getScore()) {
+            homeStat.setRankingPoint(homeStat.getRankingPoint() + 3 );
+        } else {
+            awayStat.setRankingPoint(awayStat.getRankingPoint() + 3 );
+        }
+        if(match.getAwayClub().getScore() == 0){
+            homeStat.setCleanSheets(homeStat.getCleanSheets() + 1);
+        } else {
+            awayStat.setScoredGals(awayStat.getScoredGals() + match.getAwayClub().getScore());
+            awayStat.adjustDifferenceGoals();
+            homeStat.setConcededGoals(homeStat.getConcededGoals() + match.getAwayClub().getScore());
+            homeStat.adjustDifferenceGoals();
+        }
+        if(match.getHomeClub().getScore() == 0){
+            awayStat.setCleanSheets(awayStat.getCleanSheets() + 1);
+        } else {
+            homeStat.setScoredGals(homeStat.getScoredGals() + match.getHomeClub().getScore());
+            homeStat.adjustDifferenceGoals();
+            awayStat.setConcededGoals(awayStat.getConcededGoals() + match.getHomeClub().getScore());
+            awayStat.adjustDifferenceGoals();
+        }
+
+        clubRepo.updateStats(homeStat);
+        clubRepo.updateStats(awayStat);
+    }
     public Match updateMatchStatus(String id, Map<String, Status> matchStatus) throws SQLException {
         Status status = matchRepo.getOneMatchStatus(id);
         if(matchStatus.get("status") == Status.STARTED && status == Status.NOT_STARTED ){
