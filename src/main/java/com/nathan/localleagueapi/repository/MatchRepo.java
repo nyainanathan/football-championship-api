@@ -132,10 +132,6 @@ public class MatchRepo {
             }
 
             conn.close();
-//            for(MatchRawData rawData : matchData){
-//                System.out.println(rawData.toString());
-//            }
-
             for(MatchRawData data :  matchData){
                 //Home team
                 MatchClub homeClub = new MatchClub(clubRepo.getOneClubMinimumInfo(data.getClubHomeId()));
@@ -168,7 +164,10 @@ public class MatchRepo {
             }
 
 
-            return matches;
+            return filters.getClubPlayingName() != null ?  matches.stream()
+                    .filter(match -> match.getAwayClub().getName().contains(filters.getClubPlayingName()) || match.getHomeClub().getName().contains(filters.getClubPlayingName()))
+                    .toList() : matches;
+
         } catch (Exception e){
             throw e;
         }
