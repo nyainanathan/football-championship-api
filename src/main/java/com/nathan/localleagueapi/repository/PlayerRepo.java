@@ -145,6 +145,16 @@ public class PlayerRepo {
         return null;
     }
 
+    public void updatePlayerStatForASeason(String playerID, String season, PlayerStat stat) throws SQLException {
+      String sql = "UPDATE player_statistics SET scored_goals = ?, playing_time = ? WHERE player_id = ?::uuid AND season = ?";
+      Connection conn = dataSource.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(sql);
+      stmt.setInt(1, stat.getScoredGoals());
+      stmt.setInt(2, stat.getPlayingTime());
+      stmt.setString(3, playerID);
+      stmt.setString(4, season);
+      stmt.executeUpdate();
+    }
 
     public PlayerStatistic getPlayerStatisticForSeason(String playerId, String season) throws SQLException {
       String sql = "SELECT * FROM player_statistics WHERE player_id = ?::uuid AND season = ?";
