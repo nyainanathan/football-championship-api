@@ -12,6 +12,7 @@ import com.nathan.localleagueapi.repository.ClubRepo;
 import com.nathan.localleagueapi.repository.MatchRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -144,7 +145,9 @@ public class MatchService {
     }
 
     public void updateStatsAfterMatch(Match match) throws SQLException {
+        System.out.println("BEfore fetching stat");
         ClubStat awayStat = clubRepo.getOneClubStatics(match.getAwayClub().getId());
+        System.out.println("after fetching stat");
         ClubStat homeStat = clubRepo.getOneClubStatics(match.getHomeClub().getId());
         if(match.getHomeClub().getScore() == match.getAwayClub().getScore()) {
             homeStat.setRankingPoint(homeStat.getRankingPoint() + 1);
@@ -171,18 +174,27 @@ public class MatchService {
             awayStat.adjustDifferenceGoals();
         }
 
+        System.out.println("Before repo updates");
         clubRepo.updateStats(homeStat);
+        System.out.println("After repo updates");
         clubRepo.updateStats(awayStat);
     }
+
+    @Transactional
     public Match updateMatchStatus(String id, Map<String, Status> matchStatus) throws SQLException {
         Status status = matchRepo.getOneMatchStatus(id);
+        System.out.println(status);
         if(matchStatus.get("status") == Status.STARTED && status == Status.NOT_STARTED ){
             matchRepo.startMatch(id);
+            System.out.println("ok");
             return matchRepo.getOneMatch(id);
-        } else if (matchStatus.get("status") == Status.FINISHED && status == Status.NOT_STARTED){
+        } else if (matchStatus.get("status") == Status.FINISHED && status == Status.STARTED){
             matchRepo.finishMatch(id);
             Match match = matchRepo.getOneMatch(id);
-
+            updateStatsAfterMatch(match);
+            return matchRepo.getOneMatch(id);
+        } else {
+                throw new SQLException("You cannot edit a match with these status");
         }
     }
 }

@@ -242,7 +242,7 @@ public class ClubRepo {
                     rs.getInt("ranking_point"),
                     rs.getInt("scored_goals"),
                     rs.getInt("conceded_goals"),
-                    rs.getInt("difference_goals"),
+                    rs.getInt("differences_goals"),
                     rs.getInt("clean_sheets"),
                     rs.getString("season")
             );
@@ -286,7 +286,7 @@ public class ClubRepo {
     }
 
     public void updateStats(ClubStat stat) throws SQLException{
-        String sql = "update clubs_statistics set ranking_point = ? , scored_goals = ? , conceded_goals = ? , clean_sheets = ? where id = ?:uuid";
+        String sql = "update clubs_statistics set ranking_point = ? , scored_goals = ? , conceded_goals = ? , clean_sheets = ? where id = ?::uuid";
         Connection conn = dataSource.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, stat.getRankingPoint());

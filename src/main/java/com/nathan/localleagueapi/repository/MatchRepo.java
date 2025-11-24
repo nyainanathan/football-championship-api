@@ -88,7 +88,7 @@ public class MatchRepo {
                         rs.getString("club_home"),
                         rs.getString("club_away"),
                         rs.getString("stadium"),
-                        Instant.parse(rs.getString("match_date")),
+                        Instant.parse(rs.getString("match_date").substring(0,10) + "T" + rs.getString("match_date").substring(11,19) + ".00Z"),
                         Status.valueOf(rs.getString("actual_status")),
                         rs.getString("season")
                 );

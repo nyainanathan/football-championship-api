@@ -15,4 +15,8 @@ public class ClubStat {
     private int differenceGoals;
     private int cleanSheets;
     private String season;
+
+    public void adjustDifferenceGoals() {
+        this.setDifferenceGoals(this.getScoredGals() - this.getConcededGoals());
+    }
 }
