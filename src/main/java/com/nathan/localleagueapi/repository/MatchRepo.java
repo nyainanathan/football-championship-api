@@ -123,7 +123,7 @@ public class MatchRepo {
         }
     }
 
-    public String getOneMathSeason(String matchId) throws SQLException {
+    public String getOneMatchSeason(String matchId) throws SQLException {
         String sql = "SELECT season FROM matches WHERE id = ?::uuid";
         Connection conn = dataSource.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);

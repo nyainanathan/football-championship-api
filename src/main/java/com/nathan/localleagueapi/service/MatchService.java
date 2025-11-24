@@ -1,9 +1,6 @@
 package com.nathan.localleagueapi.service;
 
-import com.nathan.localleagueapi.dto.ClubStat;
-import com.nathan.localleagueapi.dto.MatchFilter;
-import com.nathan.localleagueapi.dto.MatchRawData;
-import com.nathan.localleagueapi.dto.NewGoal;
+import com.nathan.localleagueapi.dto.*;
 import com.nathan.localleagueapi.model.Status;
 import com.nathan.localleagueapi.model.club.Club;
 import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
@@ -200,10 +197,64 @@ public class MatchService {
     }
 
     public Match addGoal(String id, List<NewGoal> goals) throws SQLException {
+        Match match = matchRepo.getOneMatch(id);
+        String matchSeason = matchRepo.getOneMatchSeason(match.getId());
+
+        Set<String> scorerID = new  HashSet<>();
+        HashMap<String,Integer> scorerGoals = new HashMap<>();
+        HashMap<String,Integer>  scorerPlayTime = new HashMap<>();
+
         for(NewGoal goal : goals){
             boolean isOwnGoal = !Objects.equals(playerRepo.getClubId(goal.getScorerIdentifier()), goal.getClubId());
             matchRepo.addGoal(goal, isOwnGoal, id);
+
+            scorerID.add(goal.getScorerIdentifier());
+
+
+            if(scorerGoals.containsKey(goal.getScorerIdentifier())){
+                scorerGoals.put(goal.getScorerIdentifier(), scorerGoals.get(goal.getScorerIdentifier()) + 1);
+            } else {
+                scorerGoals.put(goal.getScorerIdentifier(), 1);
+            }
+            if(scorerPlayTime.containsKey(goal.getScorerIdentifier())){
+                if(scorerPlayTime.get(goal.getScorerIdentifier()) < goal.getMinuteOfGoal()){
+                    scorerPlayTime.put(goal.getScorerIdentifier(), goal.getMinuteOfGoal());
+                }
+            } else {
+                scorerPlayTime.put(goal.getScorerIdentifier(), goal.getMinuteOfGoal());
+            }
         }
+
+        List<PlayerStat> playerStats =  new ArrayList<>();
+
+        System.out.println("Goals map keys : " +  scorerGoals.keySet());
+        System.out.println("Goals map values: " + scorerGoals.values());
+
+        System.out.println("Time played map keys : " +  scorerPlayTime.keySet());
+        System.out.println("Time played map values: " + scorerPlayTime.values());
+
+
+        scorerID.forEach(scorer -> {
+            try {
+                System.out.println(scorer);
+                PlayerStat ok = playerRepo.getOnePlayerStatForASeason(scorer, matchSeason);
+                System.out.println(ok.toString());
+                playerStats.add(
+                        ok
+                );
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        System.out.println("ok");
+
+        for(PlayerStat playerStat : playerStats){
+            playerStat.addGoal(scorerGoals.getOrDefault(playerStat.getPlayerId(), 0));
+            playerStat.addPlayingTime(scorerPlayTime.getOrDefault(playerStat.getPlayerId(), 0));
+            playerRepo.updatePlayerStatForASeason(playerStat.getPlayerId(), matchSeason, playerStat);
+        }
+        
         return matchRepo.getOneMatch(id);
     }
 

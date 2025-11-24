@@ -133,15 +133,22 @@ public class PlayerRepo {
       stmt.setString(1, playerID);
       stmt.setString(2, season);
       ResultSet rs = stmt.executeQuery();
+
+        System.out.println("player id " + playerID + " season " + season);
         if (rs.next()) {
-            return new PlayerStat(
+            System.out.println("ok");
+            PlayerStat p =  new PlayerStat(
                 rs.getString("player_id"),
                     rs.getString("season"),
                     rs.getInt("scored_goals"),
                     rs.getInt("playing_time"),
-                    DurationUnit.valueOf(rs.getString("duration_unit"))
+                    DurationUnit.MINUTE
             );
+            conn.close();
+            System.out.println(p.toString());
+            return p;
         }
+        System.out.println("noteok");
         return null;
     }
 
