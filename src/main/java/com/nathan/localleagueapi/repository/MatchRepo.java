@@ -2,6 +2,7 @@ package com.nathan.localleagueapi.repository;
 
 import com.nathan.localleagueapi.dto.MatchFilter;
 import com.nathan.localleagueapi.dto.MatchRawData;
+import com.nathan.localleagueapi.dto.NewGoal;
 import com.nathan.localleagueapi.model.Status;
 import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
 import com.nathan.localleagueapi.model.match.Match;
@@ -152,6 +153,17 @@ public class MatchRepo {
         stmt.executeUpdate();
     }
 
+    public void addGoal(NewGoal newGoal, boolean ownGoal, String matchId) throws SQLException {
+        String sql = "insert into goals (match_id, player_id, minute_of_goal, own_goal, club_id) values (?::uuid, ?::uuid, ?, ?, ?::uuid)";
+        Connection conn =  dataSource.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, matchId);
+        stmt.setString(2, newGoal.getScorerIdentifier());
+        stmt.setInt(3, newGoal.getMinuteOfGoal());
+        stmt.setBoolean(4, ownGoal);
+        stmt.setString(5, newGoal.getClubId());
+        stmt.executeUpdate();
+    }
 
     public List<Match> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
         List<Match> matches = new ArrayList<>();
