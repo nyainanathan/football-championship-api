@@ -47,7 +47,7 @@ public class MatchService {
 
         List<Instant> matchDates = new ArrayList<>();
         matchDates.add(start);
-        System.out.println(rounds);
+
         for(int i = 1 ; i < rounds * 2; i++){
             if(i%5 ==0)
                 matchDates.add(matchDates.get(i-1).plus(Duration.ofDays(21)));
@@ -55,10 +55,6 @@ public class MatchService {
                 matchDates.add(matchDates.get(i-1).plus(Duration.ofDays(31)));
             else
                 matchDates.add(matchDates.get(i-1).plus(Duration.ofDays(14)));
-        }
-
-        for(Instant d : matchDates){
-            System.out.println(d);
         }
 
         for(int round = 0; round < rounds; round++){
@@ -114,7 +110,7 @@ public class MatchService {
         List<Match> secondLegMatches = new ArrayList<>();
             int i = 1;
             int counter = 1;
-        System.out.println(rounds + " rounds");
+
             for(Match match : seasonMatch){
                 String thisMatchStadium = clubsFullInfo.stream()
                                 .filter(c -> c.getId().equals(match.getAwayClub().getId()))
@@ -145,10 +141,11 @@ public class MatchService {
     }
 
     public void updateStatsAfterMatch(Match match) throws SQLException {
-        System.out.println("BEfore fetching stat");
+
         ClubStat awayStat = clubRepo.getOneClubStatics(match.getAwayClub().getId());
-        System.out.println("after fetching stat");
+
         ClubStat homeStat = clubRepo.getOneClubStatics(match.getHomeClub().getId());
+
         if(match.getHomeClub().getScore() == match.getAwayClub().getScore()) {
             homeStat.setRankingPoint(homeStat.getRankingPoint() + 1);
             awayStat.setRankingPoint(awayStat.getRankingPoint() + 1);
@@ -157,6 +154,8 @@ public class MatchService {
         } else {
             awayStat.setRankingPoint(awayStat.getRankingPoint() + 3 );
         }
+
+
         if(match.getAwayClub().getScore() == 0){
             homeStat.setCleanSheets(homeStat.getCleanSheets() + 1);
         } else {
@@ -174,19 +173,20 @@ public class MatchService {
             awayStat.adjustDifferenceGoals();
         }
 
-        System.out.println("Before repo updates");
+
         clubRepo.updateStats(homeStat);
-        System.out.println("After repo updates");
+
         clubRepo.updateStats(awayStat);
     }
 
     @Transactional
     public Match updateMatchStatus(String id, Map<String, Status> matchStatus) throws SQLException {
+
         Status status = matchRepo.getOneMatchStatus(id);
-        System.out.println(status);
+
         if(matchStatus.get("status") == Status.STARTED && status == Status.NOT_STARTED ){
             matchRepo.startMatch(id);
-            System.out.println("ok");
+
             return matchRepo.getOneMatch(id);
         } else if (matchStatus.get("status") == Status.FINISHED && status == Status.STARTED){
             matchRepo.finishMatch(id);

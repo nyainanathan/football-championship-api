@@ -115,7 +115,7 @@ public class ClubController {
     @GetMapping("/statistics/{seasonYear}")
     public ResponseEntity<List<ClubStatics>> getClubStats(@PathVariable String seasonYear, @RequestParam(required = false) boolean hasToBeClassified){
         try{
-            System.out.println(hasToBeClassified);
+
             List<ClubStatics> stats = service.getAllClubStats(hasToBeClassified, seasonYear);
             return new ResponseEntity<>(stats, HttpStatus.OK);
         } catch (Exception e){

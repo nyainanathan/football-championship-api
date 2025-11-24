@@ -179,7 +179,7 @@ public class ClubRepo {
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
-                System.out.println("there is a result set");
+
                 return playerRowMapper.map(rs);
             }
         } catch(Exception e){

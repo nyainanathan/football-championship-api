@@ -157,7 +157,7 @@ public class MatchRepo {
         List<Match> matches = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM matches where season = ? ");
 
-        System.out.println(filters.toString());
+
 
         if(filters.getMatchAfter() != null){
             sql.append(" and match_date > ?::timestamp ");
@@ -168,7 +168,7 @@ public class MatchRepo {
         if(filters.getMatchStatus() != null){
             sql.append(" and actual_status = ?::status_enum ");
         }
-        System.out.println(sql.toString());
+
         try{
             Connection conn = dataSource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
@@ -176,19 +176,19 @@ public class MatchRepo {
             int filter = 2;
 
             if(filters.getMatchAfter() != null){
-                System.out.println("gotMatchAfter");
+
                 stmt.setString(filter, filters.getMatchAfter().toString());
                 filter++;
             }
 
             if(filters.getMatchBeforeOrEquals() != null){
-                System.out.println("gotMatchBefore");
+
                 stmt.setString(filter, String.valueOf(Timestamp.from(Instant.parse(filters.getMatchBeforeOrEquals().toString()))));
                 filter++;
             }
 
             if(filters.getMatchStatus() != null){
-                System.out.println("gotMatchStatus");
+
                 stmt.setString(filter, filters.getMatchStatus().toString());
             }
 
@@ -219,7 +219,7 @@ public class MatchRepo {
                 MatchClub awayClub = new MatchClub(clubRepo.getOneClubMinimumInfo(data.getClubAwayId()));
 
                 List<Scorer> homeScorers = this.getScorers(data.getId(), homeClub.getId());
-                System.out.println("Breakpoint");
+
                 List<Scorer>  awayScorers = this.getScorers(data.getId(), awayClub.getId());
 
                 homeClub.setScorers(homeScorers);
@@ -239,9 +239,6 @@ public class MatchRepo {
                         )
                 );
 
-                for(Match m : matches){
-                    System.out.println(m.toString());
-                }
             }
 
 

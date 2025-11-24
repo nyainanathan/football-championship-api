@@ -134,9 +134,7 @@ public class PlayerRepo {
           stmt.setString(2, season);
           ResultSet rs =  stmt.executeQuery();
           if(rs.next()){
-              System.out.println(rs.getInt("scored_goals"));
-              System.out.println(rs.getInt("playing_time"));
-              System.out.println(DurationUnit.valueOf(rs.getString("duration_unit")));
+
             PlayerStatistic stat = new PlayerStatistic(
                     rs.getInt("scored_goals"),
                     new PlayingTime(
@@ -146,7 +144,7 @@ public class PlayerRepo {
             );
 
             conn.close();
-              System.out.println(stat.toString());
+
             return stat;
           }
           else {

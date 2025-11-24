@@ -29,7 +29,6 @@ public class MatchController {
             List<Match> matches = service.getSeasonMatch(seasonYear, filters);
             return new ResponseEntity<>(matches, HttpStatus.OK);
         } catch (Exception e){
-            e.printStackTrace();
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

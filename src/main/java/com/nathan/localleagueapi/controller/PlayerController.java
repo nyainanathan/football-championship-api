@@ -43,7 +43,6 @@ public class PlayerController {
     public ResponseEntity<PlayerStatistic> getOnePlayerStatistic(@PathVariable String id, @PathVariable String seasonYear) throws SQLException {
         try{
             PlayerStatistic stat = service.getStatForPlayerByYear(id, seasonYear);
-            System.out.println(stat.toString());
             return new  ResponseEntity<>(stat, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

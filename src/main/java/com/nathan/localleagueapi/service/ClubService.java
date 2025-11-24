@@ -64,7 +64,7 @@ public class ClubService {
     public List<Player> removePlayers(List<Player> players, String clubID) throws SQLException {
         for(Player player : players){
             String playerClub = playerRepo.getClubId(player.getId());
-            System.out.println(playerClub);
+
             if(Objects.equals(playerClub, clubID)){
                 repo.removePlayerFromClub(player.getId());
             } else if (playerClub == null){
@@ -77,18 +77,17 @@ public class ClubService {
 
     public List<Player> attachPlayers(List<Player> players, String clubID) throws SQLException {
         for(Player player : players){
-            System.out.println("in the service");
-            System.out.println("THis player id: " + player.getId());
+
             Player thisPlayer = playerRepo.getPlayerById(player.getId());
-            System.out.println(thisPlayer);
+
             if(thisPlayer == null){
-                System.out.println("This player does not exit bro");
+
                 Player createdPlayer = playerRepo.createPlayer(player);
                 repo.attachPlayerToClub(clubID, createdPlayer.getId());
             } else {
-                System.out.println("This player does exist");
+
                 String playerClub = playerRepo.getClubId(player.getId());
-                System.out.println(playerClub);
+
                 if (playerClub == null){
                     repo.attachPlayerToClub(clubID, player.getId());
                 } else {
