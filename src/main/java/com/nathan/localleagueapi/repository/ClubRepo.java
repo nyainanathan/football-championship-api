@@ -1,5 +1,6 @@
 package com.nathan.localleagueapi.repository;
 
+import com.nathan.localleagueapi.dto.ClubStat;
 import com.nathan.localleagueapi.dto.MatchFilter;
 import com.nathan.localleagueapi.dto.MatchRawData;
 import com.nathan.localleagueapi.mapper.ClubMinimalInfoRowMapper;
@@ -229,8 +230,27 @@ public class ClubRepo {
 
     //Stats
 
+    public ClubStat getOneClubStatics(String clubId) throws SQLException{
+        String sql = "SELECT * FROM clubs_statistics WHERE id = ?::uuid";
+        Connection conn = dataSource.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, clubId);
+        ResultSet rs = stmt.executeQuery();
+        if(rs.next()){
+            return new ClubStat(
+                rs.getString("id"),
+                    rs.getInt("ranking_point"),
+                    rs.getInt("scored_goals"),
+                    rs.getInt("conceded_goals"),
+                    rs.getInt("difference_goals"),
+                    rs.getInt("clean_sheets"),
+                    rs.getString("season")
+            );
+        }
+    }
+
     public void updateStatsAfterMatch(Match match){
-        if(match.getHomeClub().getScore() == match.getAwayClub().setScore()){
+        if(match.getHomeClub().getScore() == match.getAwayClub().getScore()){
 
         }
     }
