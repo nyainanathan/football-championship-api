@@ -134,6 +134,15 @@ public class MatchRepo {
         return null;
     }
 
+    public void startMatch(String matchId) throws SQLException {
+        String sql = "UPDATE matches set actual_status = ?::status_enum WHERE id = ?::uuid";
+        Connection conn = dataSource.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, String.valueOf(Status.STARTED));
+        stmt.setString(2, matchId);
+        stmt.executeUpdate();
+    }
+
     public List<Match> getSeasonMatch(String season, MatchFilter filters) throws SQLException {
         List<Match> matches = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM matches where season = ? ");
