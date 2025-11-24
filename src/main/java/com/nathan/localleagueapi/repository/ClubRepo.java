@@ -247,13 +247,10 @@ public class ClubRepo {
                     rs.getString("season")
             );
         }
+        return null;
     }
 
-    public void updateStatsAfterMatch(Match match){
-        if(match.getHomeClub().getScore() == match.getAwayClub().getScore()){
-
-        }
-    }
+    
 
     public List<ClubStatics> getAllClubsStats(boolean hasToBeClassified, String season) throws SQLException {
         StringBuilder sql = new StringBuilder("select c.*, s.*, co.name as coach_name, co.nationality as coach_nationality from clubs as c inner join clubs_statistics as s on c.id = s.id inner join coaches as co on c.coach_id = co.id where season = ? order by ");
@@ -288,5 +285,16 @@ public class ClubRepo {
 
     }
 
+    public void updateStats(ClubStat stat) throws SQLException{
+        String sql = "update clubs_statistics set ranking_point = ? , scored_goals = ? , conceded_goals = ? , clean_sheets = ? where id = ?:uuid";
+        Connection conn = dataSource.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, stat.getRankingPoint());
+        stmt.setInt(2, stat.getScoredGals());
+        stmt.setInt(3, stat.getConcededGoals());
+        stmt.setInt(4, stat.getCleanSheets());
+        stmt.setString(5, stat.getId());
+        stmt.executeUpdate();
+    }
 }
 
