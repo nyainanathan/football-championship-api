@@ -3,6 +3,7 @@ package com.nathan.localleagueapi.service;
 import com.nathan.localleagueapi.dto.ClubStat;
 import com.nathan.localleagueapi.dto.MatchFilter;
 import com.nathan.localleagueapi.dto.MatchRawData;
+import com.nathan.localleagueapi.dto.NewGoal;
 import com.nathan.localleagueapi.model.Status;
 import com.nathan.localleagueapi.model.club.Club;
 import com.nathan.localleagueapi.model.club.ClubMinimumInfo;
@@ -10,6 +11,7 @@ import com.nathan.localleagueapi.model.match.Match;
 import com.nathan.localleagueapi.model.match.MatchClub;
 import com.nathan.localleagueapi.repository.ClubRepo;
 import com.nathan.localleagueapi.repository.MatchRepo;
+import com.nathan.localleagueapi.repository.PlayerRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
 public class MatchService {
+
     private ClubRepo clubRepo;
     private MatchRepo matchRepo;
+    private PlayerRepo playerRepo;
 
     public List<Match> createSeasonMatch(String season) throws SQLException {
         List<Match> seasonMatch = new ArrayList<>();
@@ -197,4 +198,13 @@ public class MatchService {
                 throw new SQLException("You cannot edit a match with these status");
         }
     }
+
+    public Match addGoal(String id, List<NewGoal> goals) throws SQLException {
+        for(NewGoal goal : goals){
+            boolean isOwnGoal = !Objects.equals(playerRepo.getClubId(goal.getScorerIdentifier()), goal.getClubId());
+            matchRepo.addGoal(goal, isOwnGoal, id);
+        }
+        return matchRepo.getOneMatch(id);
+    }
+
 }
